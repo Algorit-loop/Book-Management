@@ -25,6 +25,8 @@ namespace RazorInMemoryDemo.Pages.Account
 
         [TempData]
         public string? StatusMessage { get; set; }
+        
+        public string? BanMessage { get; set; }
 
         public class InputModel
         {
@@ -37,9 +39,14 @@ namespace RazorInMemoryDemo.Pages.Account
             public string Password { get; set; } = string.Empty;
         }
 
-        public void OnGet(string? returnUrl = null)
+        public void OnGet(string? returnUrl = null, bool banned = false)
         {
             ReturnUrl = returnUrl ?? Url.Content("~/");
+            
+            if (banned)
+            {
+                BanMessage = "Your account has been banned. Please contact an administrator.";
+            }
         }
 
         public async Task<IActionResult> OnPostAsync(string? returnUrl = null)

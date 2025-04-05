@@ -13,6 +13,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         }
+        
+        @if (!string.IsNullOrEmpty(Model.BanMessage))
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-shield-x me-2"></i> @Model.BanMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        
         <div class="card shadow">
             <div class="card-header bg-primary text-white text-center">
                 <h2>Login</h2>

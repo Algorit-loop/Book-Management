@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using RazorInMemoryDemo.Models;
+using RazorInMemoryDemo.Hubs;
+using Microsoft.AspNetCore.Authorization;
+using RazorInMemoryDemo.Middleware;
+using RazorInMemoryDemo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +29,9 @@ builder.Services.AddSession(options =>
 // Add HttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 
+// Add SignalR
+builder.Services.AddSignalR();
+
 // Add authentication and authorization
 builder.Services.AddAuthentication("CookieAuth")
     .AddCookie("CookieAuth", options =>
@@ -32,17 +39,37 @@ builder.Services.AddAuthentication("CookieAuth")
         options.Cookie.Name = "UserLoginCookie";
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
+        options.Events.OnRedirectToLogin = context =>
+        {
+            // If the user was logged in but is now banned, clear their cookies
+            if (context.Request.Path.StartsWithSegments("/Account/Logout/Banned"))
+            {
+                // Cookie will be cleared by the Logout page
+            }
+            return Task.CompletedTask;
+        };
     });
+
+// Add custom requirement for active user check
+builder.Services.AddScoped<IAuthorizationHandler, RazorInMemoryDemo.ActiveUserHandler>();
 
 builder.Services.AddAuthorization(options =>
 {
+    // Policy to check if user is active (not banned)
+    options.AddPolicy("ActiveUser", policy =>
+        policy.Requirements.Add(new RazorInMemoryDemo.ActiveUserRequirement()));
+
+    // Admin policy now requires the user to be active as well
     options.AddPolicy("AdminPolicy", policy => 
-        policy.RequireClaim("Role", "Admin"));
+        policy.RequireClaim("Role", "Admin")
+              .AddRequirements(new RazorInMemoryDemo.ActiveUserRequirement()));
     
+    // User policy now requires the user to be active
     options.AddPolicy("UserPolicy", policy => 
         policy.RequireAssertion(context => 
             context.User.HasClaim(c => 
-                (c.Type == "Role" && (c.Value == "Admin" || c.Value == "User")))));
+                (c.Type == "Role" && (c.Value == "Admin" || c.Value == "User"))))
+              .AddRequirements(new RazorInMemoryDemo.ActiveUserRequirement()));
 });
 
 var app = builder.Build();
@@ -63,10 +90,14 @@ app.UseRouting();
 // Add session middleware
 app.UseSession();
 
+// Add ban check middleware (must be after session and before authentication)
+app.UseUserBanCheck();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapHub<UserHub>("/userHub"); // Add SignalR Hub endpoint
 
 // Seed the database
 using (var scope = app.Services.CreateScope())
