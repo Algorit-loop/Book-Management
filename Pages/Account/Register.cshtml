@@ -1,21 +1,14 @@
 @page
-@model RazorInMemoryDemo.Pages.Account.LoginModel
+@model RazorInMemoryDemo.Pages.Account.RegisterModel
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Register";
 }
 
 <div class="row justify-content-center mt-5">
-    <div class="col-md-4">
-        @if (!string.IsNullOrEmpty(Model.StatusMessage))
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                @Model.StatusMessage
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
+    <div class="col-md-6">
         <div class="card shadow">
-            <div class="card-header bg-primary text-white text-center">
-                <h2>Login</h2>
+            <div class="card-header bg-success text-white text-center">
+                <h2>Create a New Account</h2>
             </div>
             <div class="card-body">
                 <form method="post">
@@ -30,17 +23,19 @@
                         <input asp-for="Input.Password" class="form-control" />
                         <span asp-validation-for="Input.Password" class="text-danger"></span>
                     </div>
-                    <div class="mb-3 d-grid">
-                        <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="mb-3">
+                        <label asp-for="Input.ConfirmPassword" class="form-label"></label>
+                        <input asp-for="Input.ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                     </div>
-                    <div class="text-center text-muted mt-2">
-                        <small>Default accounts: admin/admin or user/123</small>
+                    <div class="mb-3 d-grid">
+                        <button type="submit" class="btn btn-success">Register</button>
                     </div>
                 </form>
             </div>
             <div class="card-footer text-center">
                 <div>
-                    Don't have an account? <a asp-page="/Account/Register">Register here</a>
+                    Already have an account? <a asp-page="/Account/Login">Log in</a>
                 </div>
             </div>
         </div>

@@ -23,6 +23,9 @@ namespace RazorInMemoryDemo.Pages.Account
 
         public string ReturnUrl { get; set; } = "";
 
+        [TempData]
+        public string? StatusMessage { get; set; }
+
         public class InputModel
         {
             [Required]
@@ -51,6 +54,12 @@ namespace RazorInMemoryDemo.Pages.Account
 
                 if (user != null)
                 {
+                    if (!user.IsActive)
+                    {
+                        ModelState.AddModelError(string.Empty, "This account has been banned. Please contact an administrator.");
+                        return Page();
+                    }
+
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, user.Username),

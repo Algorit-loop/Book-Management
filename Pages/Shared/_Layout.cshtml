@@ -32,6 +32,14 @@
                                 <i class="bi bi-collection me-1"></i>Books
                             </a>
                         </li>
+                        @if (Context.Session.GetString("Role") == "Admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-page="/Admin/Users/Index">
+                                    <i class="bi bi-people me-1"></i>User Management
+                                </a>
+                            </li>
+                        }
                     </ul>
                     <ul class="navbar-nav">
                         @if (Context.Session.GetString("Username") != null)
@@ -60,6 +68,11 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="" asp-page="/Account/Login">
                                     <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-page="/Account/Register">
+                                    <i class="bi bi-person-plus me-1"></i>Register
                                 </a>
                             </li>
                         }

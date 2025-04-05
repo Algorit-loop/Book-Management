@@ -23,8 +23,8 @@ namespace RazorInMemoryDemo.Models
 
             // Seed admin user 
             modelBuilder.Entity<User>().HasData(
-                new User { Id = 1, Username = "admin", Password = "admin", Role = "Admin" },
-                new User { Id = 2, Username = "user", Password = "123", Role = "User" }
+                new User { Id = 1, Username = "admin", Password = "admin", Role = "Admin", IsActive = true },
+                new User { Id = 2, Username = "user", Password = "123", Role = "User", IsActive = true }
             );
         }
     }
