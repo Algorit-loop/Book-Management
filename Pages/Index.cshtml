@@ -1,0 +1,88 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="container mt-4">
+    <div class="jumbotron bg-light p-5 rounded shadow">
+        <h1 class="display-4">Welcome to Book Management</h1>
+        <p class="lead">A simple demo application using Razor Pages, In-Memory Database, and Session Authentication.</p>
+        <hr class="my-4">
+        @if (Model.IsLoggedIn)
+        {
+            <p>Welcome back, <strong>@Model.CurrentUsername</strong>! You are logged in as <span class="badge bg-primary">@Model.CurrentRole</span></p>
+            <a class="btn btn-primary btn-lg" asp-page="/Books/Index" role="button">View Books</a>
+        }
+        else
+        {
+            <p>Please login to manage books.</p>
+            <a class="btn btn-primary btn-lg" asp-page="/Account/Login" role="button">Login</a>
+            <p class="mt-2 text-muted"><small>Default admin account: admin/admin</small></p>
+        }
+    </div>
+
+    @if (Model.RecentBooks.Any())
+    {
+        <div class="row mt-5">
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Recent Books</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var book in Model.RecentBooks)
+                            {
+                                <div class="col-md-4 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@book.Title</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">@book.Author</h6>
+                                        </div>
+                                        <div class="card-footer bg-transparent border-top-0">
+                                            <a asp-page="/Books/Details" asp-route-id="@book.Id" class="btn btn-sm btn-outline-primary">View Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">In-Memory Database</h5>
+                </div>
+                <div class="card-body">
+                    <p>This application uses Entity Framework Core's In-Memory Database provider for demonstration purposes.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Session Authentication</h5>
+                </div>
+                <div class="card-body">
+                    <p>Using HttpContext.Session for storing user authentication and authorization information.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 shadow">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0">Role-Based Authorization</h5>
+                </div>
+                <div class="card-body">
+                    <p>Implements role-based access control with Admin and User roles. Only Admins can modify data.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

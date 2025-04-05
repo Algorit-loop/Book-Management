@@ -1,0 +1,53 @@
+@page "{id:int}"
+@model RazorInMemoryDemo.Pages.Books.EditModel
+@{
+    ViewData["Title"] = "Edit Book";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-page="/Books/Index">Books</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                </ol>
+            </nav>
+
+            <div class="card shadow">
+                <div class="card-header bg-warning">
+                    <h2 class="mb-0">Edit Book</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Book.Id" />
+                        <div class="mb-3">
+                            <label asp-for="Book.Title" class="form-label"></label>
+                            <input asp-for="Book.Title" class="form-control" />
+                            <span asp-validation-for="Book.Title" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Book.Author" class="form-label"></label>
+                            <input asp-for="Book.Author" class="form-control" />
+                            <span asp-validation-for="Book.Author" class="text-danger"></span>
+                        </div>
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-check-circle"></i> Save
+                            </button>
+                            <a asp-page="./Index" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} 
